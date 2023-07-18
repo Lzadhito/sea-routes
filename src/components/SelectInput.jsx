@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { DUMMY_LOCATIONS } from '../../../constants';
+import { DUMMY_LOCATIONS } from '../constants';
+import { useEffect } from 'react';
 // import { useQuery } from 'react-query';
 
 export default function SelectInput({
@@ -12,6 +13,11 @@ export default function SelectInput({
 }) {
   const [showSelectLocationModal, setShowSelectLocationModal] = useState(false);
   const [inputVal, setInputVal] = useState(coordinate?.properties?.name || '');
+
+  // Prefill input value
+  useEffect(() => {
+    if (coordinate?.properties?.name) setInputVal(coordinate.properties.name);
+  }, [coordinate?.properties?.name]);
 
   // console.log(inputVal);
   // const { data = {} } = useQuery({
@@ -77,9 +83,10 @@ export default function SelectInput({
       {showSelectLocationModal && (
         <div
           // onClick={() => setShowSelectLocationModal((prev) => !prev)}
-          className="p-10 transition-opacity absolute top-0 left-0 z-10 bg-green-200 w-full h-full"
+          className="p-10 transition-opacity absolute top-0 left-0 z-10 bg-green-200 w-full h-full xl:h-screen xl:max-h-screen xl:w-96"
         >
           <input
+            defaultValue={coordinate?.properties?.name}
             onChange={(event) => setInputVal(event.target.value)}
             className="outline-none rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
             value={inputVal}

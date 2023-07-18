@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Map from './components/Map';
-import SelectInput from './components/SelectionBar/components/SelectInput';
+import SelectInput from './components/SelectInput';
 import { DUMMY_ROUTES } from './constants';
 
 const App = () => {
