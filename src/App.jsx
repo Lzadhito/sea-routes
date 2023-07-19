@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import Map from './components/Map';
-import SelectInput from './components/SelectInput';
+import { useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useMemo } from 'react';
+
+import Map from '~/components/Map';
+import SelectInput from '~/components/SelectInput';
 
 const App = () => {
   const [selectedCoordinates, setSelectedCoordinates] = useState([null]);
   const isCompleteCoordinates = selectedCoordinates.every((coordinate) => coordinate !== null);
 
-  const { data = {}, isLoading } = useQuery({
+  const { data = {}, isLoading: isLoadingFetchRoute } = useQuery({
     queryKey: ['searchRoutes', selectedCoordinates],
     queryFn: function () {
       const stringifyCoordinates = selectedCoordinates.reduce(
@@ -49,6 +49,7 @@ const App = () => {
       <div className="p-6 gap-2 flex flex-col w-full xl:h-screen xl:max-h-screen xl:w-96">
         {selectedCoordinates.map((coordinate, index) => (
           <SelectInput
+            isLoadingFetchRoute={isLoadingFetchRoute}
             coordinate={coordinate}
             key={`input-${index}`}
             onAddInput={handleAddInput}
