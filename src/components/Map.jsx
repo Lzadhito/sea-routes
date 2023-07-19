@@ -1,8 +1,8 @@
 import { useRef, useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
-import { JAKARTA_COORDINATES } from '../constants';
+import { JAKARTA_COORDINATES } from '~/constants';
 
-const Map = ({ routeCoordinates, className }) => {
+const Map = ({ routeCoordinates, className, isRemoveRoute }) => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
 
@@ -57,36 +57,38 @@ const Map = ({ routeCoordinates, className }) => {
 
   // Route draw & undraw
   useEffect(() => {
-    // Add data to route layer to drawn the route line
-    if (routeCoordinates.length > 1 && mapRef.current.getSource('route')) {
-      mapRef.current.getSource('route').setData({
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: routeCoordinates,
-        },
-      });
+    if (mapRef.current.getSource('route')) {
+      // Add data to route layer to drawn the route line
+      if (routeCoordinates) {
+        mapRef.current.getSource('route').setData({
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: routeCoordinates,
+          },
+        });
 
-      const bounds = routeCoordinates.reduce((bounds, coord) => {
-        return bounds.extend(coord);
-      }, new maplibregl.LngLatBounds(routeCoordinates[0], routeCoordinates[0]));
+        const bounds = routeCoordinates.reduce((bounds, coord) => {
+          return bounds.extend(coord);
+        }, new maplibregl.LngLatBounds(routeCoordinates[0], routeCoordinates[0]));
 
-      mapRef.current.fitBounds(bounds, { padding: 50 });
+        mapRef.current.fitBounds(bounds, { padding: 50 });
+      }
+
+      // Remove data on not showing route
+      else if (isRemoveRoute) {
+        mapRef.current.getSource('route').setData({
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: [],
+          },
+        });
+      }
     }
-
-    // Remove data on not showing route
-    else if (mapRef.current.getSource('route')) {
-      mapRef.current.getSource('route').setData({
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: [],
-        },
-      });
-    }
-  }, [routeCoordinates]);
+  }, [isRemoveRoute, routeCoordinates]);
 
   return <div ref={mapContainerRef} className={className} />;
 };

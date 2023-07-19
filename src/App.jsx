@@ -1,32 +1,32 @@
 import { useState } from 'react';
 import Map from './components/Map';
 import SelectInput from './components/SelectInput';
-import { DUMMY_ROUTES } from './constants';
+import { useQuery } from 'react-query';
+import { useMemo } from 'react';
 
 const App = () => {
   const [selectedCoordinates, setSelectedCoordinates] = useState([null]);
+  const isCompleteCoordinates = selectedCoordinates.every((coordinate) => coordinate !== null);
 
-  const isShowRoute = selectedCoordinates.length > 1 && selectedCoordinates.every((coordinate) => coordinate !== null);
-  // const { data = {} } = useQuery({
-  //   queryKey: ['searchRoutes', selectedCoordinates],
-  //   queryFn: function () {
-  //     const stringifyCoordinates = selectedCoordinates.reduce(
-  //       (acc, curr, index) => (acc += `${index !== 0 ? ';' : ''}${curr.geometry?.coordinates?.join(',')}`),
-  //       ''
-  //     );
-  //     return fetch(`https://api.searoutes.com/route/v2/sea/${stringifyCoordinates}`, {
-  //       headers: {
-  //         accept: 'application/json',
-  //         'x-api-key': import.meta.env.VITE_SEAROUTES_KEY,
-  //       },
-  //     })
-  //       .then((resp) => resp.json())
-  //       .then((val) => val);
-  //   },
-  //   enabled: selectedCoordinates.length > 1 && selectedCoordinates.every((coordinate) => coordinate !== null),
-  // });
-
-  // console.log(data);
+  const { data = {}, isLoading } = useQuery({
+    queryKey: ['searchRoutes', selectedCoordinates],
+    queryFn: function () {
+      const stringifyCoordinates = selectedCoordinates.reduce(
+        (acc, curr, index) => (acc += `${index !== 0 ? ';' : ''}${curr.geometry?.coordinates?.join(',')}`),
+        ''
+      );
+      return fetch(`https://api.searoutes.com/route/v2/sea/${stringifyCoordinates}`, {
+        headers: {
+          accept: 'application/json',
+          'x-api-key': import.meta.env.VITE_SEAROUTES_KEY,
+        },
+      })
+        .then((resp) => resp.json())
+        .then((val) => val);
+    },
+    staleTime: 1000 * 3600,
+    enabled: selectedCoordinates.length > 1 && isCompleteCoordinates,
+  });
 
   const handleClickLocation = (location, index) => {
     const newCoordinates = [...selectedCoordinates];
@@ -41,6 +41,8 @@ const App = () => {
   const handleRemoveInput = (coordinatedIdx) => {
     setSelectedCoordinates((prev) => prev.filter((_, index) => index !== coordinatedIdx));
   };
+
+  const routeCoordinates = useMemo(() => data?.features?.flatMap((feat) => feat.geometry.coordinates), [data]);
 
   return (
     <div className="w-screen h-screen flex overflow-hidden flex-col xl:flex-row">
@@ -57,12 +59,7 @@ const App = () => {
           />
         ))}
       </div>
-      <Map
-        routeCoordinates={
-          selectedCoordinates.length > 1 ? DUMMY_ROUTES.features.flatMap((feat) => feat.geometry.coordinates) : []
-        }
-        className="h-full grow"
-      />
+      <Map routeCoordinates={routeCoordinates} className="h-full grow" />
     </div>
   );
 };

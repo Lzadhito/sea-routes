@@ -41,10 +41,7 @@ export default function SelectLocationModal({ coordinateName = '', onClose, onCl
         <input
           className="outlined-input"
           type="search"
-          onChange={(event) => {
-            console.log(event);
-            setInputVal(event.target.value);
-          }}
+          onChange={(event) => setInputVal(event.target.value)}
           value={inputVal}
         />
       </div>

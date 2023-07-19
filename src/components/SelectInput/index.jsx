@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import SelectLocationModal from '~/components/SelectLocationModal';
+
+import SelectLocationModal from './components/SelectLocationModal';
 import IconButton from '~/ui/IconButton';
 
 export default function SelectInput({
