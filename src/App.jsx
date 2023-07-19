@@ -28,7 +28,6 @@ const App = () => {
         .then((resp) => resp.json())
         .then((val) => val);
     },
-    onError: (a, b) => console.log({ a, b }),
     staleTime: 1000 * 3600,
     enabled: selectedCoordinates.length > 1 && isCompleteCoordinates,
   });
