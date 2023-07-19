@@ -1,10 +1,13 @@
 import { useRef, useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
+
 import { JAKARTA_COORDINATES } from '~/constants';
 
-const Map = ({ routeCoordinates, className, isRemoveRoute }) => {
+const Map = ({ selectedCoordinates, routeCoordinates, className, isRemoveRoute }) => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
+  const mapMarkers = useRef([]);
 
   /**
    * Initialize Map:
@@ -88,7 +91,18 @@ const Map = ({ routeCoordinates, className, isRemoveRoute }) => {
         });
       }
     }
-  }, [isRemoveRoute, routeCoordinates]);
+
+    // Add marker to every selected point
+    mapMarkers.current.forEach((marker) => marker.remove());
+    selectedCoordinates?.forEach((coordinate) => {
+      if (coordinate) {
+        const marker = new maplibregl.Marker({ color: 'red' })
+          .setLngLat(coordinate.geometry?.coordinates)
+          .addTo(mapRef.current);
+        mapMarkers.current.push(marker);
+      }
+    });
+  }, [isRemoveRoute, routeCoordinates, selectedCoordinates]);
 
   return <div ref={mapContainerRef} className={className} />;
 };

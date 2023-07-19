@@ -60,7 +60,7 @@ const App = () => {
           />
         ))}
       </div>
-      <Map routeCoordinates={routeCoordinates} className="h-full grow" />
+      <Map selectedCoordinates={selectedCoordinates} routeCoordinates={routeCoordinates} className="h-full grow" />
     </div>
   );
 };
