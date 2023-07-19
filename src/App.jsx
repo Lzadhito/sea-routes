@@ -72,7 +72,7 @@ const App = () => {
             <label htmlFor="apiKeyInput" className="font-medium flex-1">
               Used API Key
             </label>
-            <IconButton size="4" onClick={() => setShowAPIKeyInput(false)} type="close" />
+            <IconButton className="w-4 h-4" onClick={() => setShowAPIKeyInput(false)} type="close" />
           </div>
           <input
             className="outlined-input"

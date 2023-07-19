@@ -47,7 +47,7 @@ export default function SelectLocationModal({ apiKey, coordinateName = '', onClo
       </div>
       <div className="flex-1 flex flex-col gap-9 justify-start mt-8 overflow-y-scroll">
         {isLoading ? (
-          <Spinner className="self-center mt-24" />
+          <Spinner containerClassName="self-center mt-24" />
         ) : (
           data?.features?.map((feature) => (
             <button
