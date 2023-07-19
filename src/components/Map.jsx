@@ -1,16 +1,22 @@
 import { useRef, useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
+import { JAKARTA_COORDINATES } from '../constants';
 
 const Map = ({ routeCoordinates, className }) => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
 
+  /**
+   * Initialize Map:
+   * - Set default center to Jakarta
+   * - Initialize route layer
+   */
   useEffect(() => {
     mapRef.current = new maplibregl.Map({
       container: mapContainerRef.current,
       style: `https://api.maptiler.com/maps/basic-v2/style.json?key=${import.meta.env.VITE_MAPLIBRE_KEY}`,
-      center: [106.84394624756091, -6.201340987157193], // Initial map center coordinates
-      zoom: 10, // Initial map zoom level
+      center: JAKARTA_COORDINATES,
+      zoom: 10,
     });
 
     mapRef.current.on('load', () => {
@@ -49,8 +55,10 @@ const Map = ({ routeCoordinates, className }) => {
     return () => mapRef.current.remove(); // Clean up on component unmount
   }, []);
 
+  // Route draw & undraw
   useEffect(() => {
-    if (routeCoordinates.length > 1) {
+    // Add data to route layer to drawn the route line
+    if (routeCoordinates.length > 1 && mapRef.current.getSource('route')) {
       mapRef.current.getSource('route').setData({
         type: 'Feature',
         properties: {},
@@ -65,6 +73,18 @@ const Map = ({ routeCoordinates, className }) => {
       }, new maplibregl.LngLatBounds(routeCoordinates[0], routeCoordinates[0]));
 
       mapRef.current.fitBounds(bounds, { padding: 50 });
+    }
+
+    // Remove data on not showing route
+    else if (mapRef.current.getSource('route')) {
+      mapRef.current.getSource('route').setData({
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: [],
+        },
+      });
     }
   }, [routeCoordinates]);
 

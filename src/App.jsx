@@ -6,6 +6,7 @@ import { DUMMY_ROUTES } from './constants';
 const App = () => {
   const [selectedCoordinates, setSelectedCoordinates] = useState([null]);
 
+  const isShowRoute = selectedCoordinates.length > 1 && selectedCoordinates.every((coordinate) => coordinate !== null);
   // const { data = {} } = useQuery({
   //   queryKey: ['searchRoutes', selectedCoordinates],
   //   queryFn: function () {
@@ -43,7 +44,7 @@ const App = () => {
 
   return (
     <div className="w-screen h-screen flex overflow-hidden flex-col xl:flex-row">
-      <div className="bg-blue-400 flex flex-col w-full xl:h-screen xl:max-h-screen xl:w-96">
+      <div className="p-6 gap-2 flex flex-col w-full xl:h-screen xl:max-h-screen xl:w-96">
         {selectedCoordinates.map((coordinate, index) => (
           <SelectInput
             coordinate={coordinate}
@@ -58,9 +59,7 @@ const App = () => {
       </div>
       <Map
         routeCoordinates={
-          selectedCoordinates.length > 1 && selectedCoordinates.every((coordinate) => coordinate !== null)
-            ? DUMMY_ROUTES.features.flatMap((feat) => feat.geometry.coordinates)
-            : []
+          selectedCoordinates.length > 1 ? DUMMY_ROUTES.features.flatMap((feat) => feat.geometry.coordinates) : []
         }
         className="h-full grow"
       />

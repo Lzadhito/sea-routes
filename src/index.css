@@ -2,8 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-.maplibregl-ctrl-attrib{
+.maplibregl-ctrl-attrib {
   display: none !important;
+}
+
+.underlined-input {
+  @apply flex-1 py-2 border-b border-gray-400 focus:border-green-400  text-gray-600 placeholder-gray-400 outline-none;
+}
+
+.outlined-input {
+  @apply bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5;
+}
+
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: #e7e7e7;
+    border: 1px solid #cacaca;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+    background-color: #d55959;
+  }
 }
 
 /* :root {
