@@ -105,7 +105,7 @@ const Map = ({ selectedCoordinates, routeCoordinates, className, isRemoveRoute }
     });
   }, [isRemoveRoute, routeCoordinates, selectedCoordinates]);
 
-  return <div ref={mapContainerRef} className={className} />;
+  return <main ref={mapContainerRef} className={className} />;
 };
 
 export default Map;

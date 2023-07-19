@@ -3,13 +3,11 @@ import { useQuery } from 'react-query';
 
 import Map from '~/components/Map';
 import SelectInput from '~/components/SelectInput';
-import IconButton from '~/components/ui/IconButton';
-import { COLORS } from '~/components/ui/constants';
+import APIKeyDialog from './components/APIKeyDialog';
 
 const App = () => {
   const [selectedCoordinates, setSelectedCoordinates] = useState([null]);
   const [apiKey, setApiKey] = useState(import.meta.env.VITE_SEAROUTES_KEY);
-  const [showAPIKeyInput, setShowAPIKeyInput] = useState(true);
   const isCompleteCoordinates = selectedCoordinates.every((coordinate) => coordinate !== null);
 
   const { data = {}, isLoading: isLoadingFetchRoute } = useQuery({
@@ -42,15 +40,17 @@ const App = () => {
     setSelectedCoordinates((prev) => [...prev, null]);
   };
 
-  const handleRemoveInput = (coordinatedIdx) => {
-    setSelectedCoordinates((prev) => prev.filter((_, index) => index !== coordinatedIdx));
+  const handleRemoveInput = () => {
+    const newCoordinates = [...selectedCoordinates];
+    newCoordinates.pop();
+    setSelectedCoordinates(newCoordinates);
   };
 
   const routeCoordinates = useMemo(() => data?.features?.flatMap((feat) => feat.geometry.coordinates), [data]);
 
   return (
     <div className="w-screen h-screen flex overflow-hidden flex-col xl:flex-row">
-      <div className="p-6 gap-2 flex flex-col w-full xl:h-screen xl:max-h-screen xl:w-96">
+      <section className="p-6 gap-2 flex flex-col w-full xl:h-screen xl:max-h-screen xl:w-96">
         {selectedCoordinates.map((coordinate, index) => (
           <SelectInput
             apiKey={apiKey}
@@ -64,31 +64,17 @@ const App = () => {
             onClickLocation={(coordinates) => handleClickLocation(coordinates, index)}
           />
         ))}
-      </div>
+      </section>
       <Map selectedCoordinates={selectedCoordinates} routeCoordinates={routeCoordinates} className="h-full grow" />
-      {showAPIKeyInput ? (
-        <div className="absolute bottom-10 right-10 bg-white p-4 rounded-xl flex-col flex gap-2">
-          <div className="flex">
-            <label htmlFor="apiKeyInput" className="font-medium flex-1">
-              Used API Key
-            </label>
-            <IconButton className="w-4 h-4" onClick={() => setShowAPIKeyInput(false)} type="close" />
-          </div>
-          <input
-            className="outlined-input"
-            name="apiKeyInput"
-            value={apiKey}
-            onChange={(event) => setApiKey(event.target.value)}
-          />
-        </div>
-      ) : (
-        <button
-          onClick={() => setShowAPIKeyInput(true)}
-          className={`absolute bottom-10 right-10 w-10 h-10 rounded-full bg-primary text-white`}
-        >
-          API
-        </button>
-      )}
+      <APIKeyDialog apiKey={apiKey} setApiKey={setApiKey} />
+      <a
+        className="absolute bottom-1 right-8 italic text-sm"
+        href="https://github.com/Lzadhito/sea-routes"
+        target="_blank"
+        rel="noreferrer"
+      >
+        @Github
+      </a>
     </div>
   );
 };
