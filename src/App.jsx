@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 
 import Map from '~/components/Map';
 import SelectInput from '~/components/SelectInput';
-import IconButton from '~/components/ui/IconButton ';
+import IconButton from '~/components/ui/IconButton';
 import { COLORS } from '~/components/ui/constants';
 
 const App = () => {
