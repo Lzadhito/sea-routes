@@ -84,7 +84,7 @@ const App = () => {
       ) : (
         <button
           onClick={() => setShowAPIKeyInput(true)}
-          className={`absolute bottom-10 right-10 w-10 h-10 rounded-full bg-[${COLORS.primary}] text-white`}
+          className={`absolute bottom-10 right-10 w-10 h-10 rounded-full bg-primary text-white`}
         >
           API
         </button>
