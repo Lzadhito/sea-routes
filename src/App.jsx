@@ -3,9 +3,13 @@ import { useQuery } from 'react-query';
 
 import Map from '~/components/Map';
 import SelectInput from '~/components/SelectInput';
+import IconButton from '~/components/ui/IconButton ';
+import { COLORS } from '~/components/ui/constants';
 
 const App = () => {
   const [selectedCoordinates, setSelectedCoordinates] = useState([null]);
+  const [apiKey, setApiKey] = useState(import.meta.env.VITE_SEAROUTES_KEY);
+  const [showAPIKeyInput, setShowAPIKeyInput] = useState(true);
   const isCompleteCoordinates = selectedCoordinates.every((coordinate) => coordinate !== null);
 
   const { data = {}, isLoading: isLoadingFetchRoute } = useQuery({
@@ -18,12 +22,13 @@ const App = () => {
       return fetch(`https://api.searoutes.com/route/v2/sea/${stringifyCoordinates}`, {
         headers: {
           accept: 'application/json',
-          'x-api-key': import.meta.env.VITE_SEAROUTES_KEY,
+          'x-api-key': apiKey,
         },
       })
         .then((resp) => resp.json())
         .then((val) => val);
     },
+    onError: (a, b) => console.log({ a, b }),
     staleTime: 1000 * 3600,
     enabled: selectedCoordinates.length > 1 && isCompleteCoordinates,
   });
@@ -49,6 +54,7 @@ const App = () => {
       <div className="p-6 gap-2 flex flex-col w-full xl:h-screen xl:max-h-screen xl:w-96">
         {selectedCoordinates.map((coordinate, index) => (
           <SelectInput
+            apiKey={apiKey}
             isLoadingFetchRoute={isLoadingFetchRoute}
             coordinate={coordinate}
             key={`input-${index}`}
@@ -61,6 +67,29 @@ const App = () => {
         ))}
       </div>
       <Map selectedCoordinates={selectedCoordinates} routeCoordinates={routeCoordinates} className="h-full grow" />
+      {showAPIKeyInput ? (
+        <div className="absolute bottom-10 right-10 bg-white p-4 rounded-xl flex-col flex gap-2">
+          <div className="flex">
+            <label htmlFor="apiKeyInput" className="font-medium flex-1">
+              Used API Key
+            </label>
+            <IconButton size="4" onClick={() => setShowAPIKeyInput(false)} type="close" />
+          </div>
+          <input
+            className="outlined-input"
+            name="apiKeyInput"
+            value={apiKey}
+            onChange={(event) => setApiKey(event.target.value)}
+          />
+        </div>
+      ) : (
+        <button
+          onClick={() => setShowAPIKeyInput(true)}
+          className={`absolute bottom-10 right-10 w-10 h-10 rounded-full bg-[${COLORS.primary}] text-white`}
+        >
+          API
+        </button>
+      )}
     </div>
   );
 };

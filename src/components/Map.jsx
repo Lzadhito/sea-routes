@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { JAKARTA_COORDINATES } from '~/constants';
+import { COLORS } from '~/components/ui/constants';
 
 const Map = ({ selectedCoordinates, routeCoordinates, className, isRemoveRoute }) => {
   const mapContainerRef = useRef(null);
@@ -49,7 +50,7 @@ const Map = ({ selectedCoordinates, routeCoordinates, className, isRemoveRoute }
           'line-cap': 'round',
         },
         paint: {
-          'line-color': '#FF9900',
+          'line-color': COLORS.primary,
           'line-width': 8,
         },
       });

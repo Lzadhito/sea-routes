@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 
-import Spinner from '~/ui/Spinner';
-import IconButton from '~/ui/IconButton';
+import Spinner from '~/components/ui/Spinner';
+import IconButton from '~/components/ui/IconButton';
 import useDebounce from '~/hooks/useDebounce';
 
-export default function SelectLocationModal({ coordinateName = '', onClose, onClickLocation }) {
+export default function SelectLocationModal({ apiKey, coordinateName = '', onClose, onClickLocation }) {
   const [inputVal, setInputVal] = useState(coordinateName);
   const debouncedInputVal = useDebounce(inputVal, 500);
 
@@ -16,7 +16,7 @@ export default function SelectLocationModal({ coordinateName = '', onClose, onCl
         mode: 'cors',
         headers: {
           accept: 'application/json',
-          'x-api-key': import.meta.env.VITE_SEAROUTES_KEY,
+          'x-api-key': apiKey,
         },
       }).then((resp) => resp.json()),
     enabled: Boolean(debouncedInputVal),

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { ICON_DRAW_VECTOR } from './constants';
 
-export default function IconButton({ onClick, invisible = false, type }) {
+export default function IconButton({ onClick, invisible = false, type, size = '6' }) {
   return (
     <svg
       onClick={onClick}
@@ -11,7 +11,7 @@ export default function IconButton({ onClick, invisible = false, type }) {
       strokeWidth={1.5}
       stroke="currentColor"
       className={classNames({
-        'w-6 h-6 text-white cursor-pointer stroke-gray-400': true,
+        [`w-${size} h-${size} text-white cursor-pointer stroke-gray-400`]: true,
         invisible,
       })}
     >

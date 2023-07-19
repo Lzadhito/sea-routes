@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 import SelectLocationModal from './components/SelectLocationModal';
-import IconButton from '~/ui/IconButton';
-import Spinner from '~/ui/Spinner';
+import IconButton from '~/components/ui/IconButton';
+import Spinner from '~/components/ui/Spinner';
 
 export default function SelectInput({
+  apiKey,
   isLoadingFetchRoute,
   coordinate,
   onClickLocation,
@@ -23,6 +24,7 @@ export default function SelectInput({
     <>
       <div className="flex gap-4 items-center">
         <input
+          placeholder="Select Port"
           disabled={isLoadingFetchRoute}
           readOnly
           className="underlined-input"
@@ -44,6 +46,7 @@ export default function SelectInput({
 
       {showSelectLocationModal && (
         <SelectLocationModal
+          apiKey={apiKey}
           coordinateName={coordinate?.properties?.name}
           onClose={handleCloseModal}
           onClickLocation={onClickLocation}

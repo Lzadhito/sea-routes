@@ -1,5 +1,6 @@
 export const JAKARTA_COORDINATES = [106.84394624756091, -6.201340987157193];
 
+// Development Only
 export const DUMMY_LOCATIONS = {
   type: 'FeatureCollection',
   features: [
